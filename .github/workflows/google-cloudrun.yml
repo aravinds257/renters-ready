@@ -38,6 +38,13 @@ jobs:
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v2
 
+    - name: Ensure Artifact Registry Repository Exists
+      run: |
+        gcloud artifacts repositories create ${{ env.REPOSITORY }} \
+          --repository-format=docker \
+          --location=${{ env.REGION }} \
+          --description="Docker repository for ${{ env.SERVICE_NAME }}" || true
+
     - name: Authorize Docker push
       run: gcloud auth configure-docker europe-west2-docker.pkg.dev --quiet
 
@@ -52,7 +59,7 @@ jobs:
         service: ${{ env.SERVICE_NAME }}
         region: ${{ env.REGION }}
         image: europe-west2-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
-        flags: '--allow-unauthenticated'
+        flags: '--allow-unauthenticated --port=8082'
         env_vars: |
           SPRING_PROFILES_ACTIVE=prod
           DATABASE_URL=${{ secrets.RENTERSREADY_DB_URL }}

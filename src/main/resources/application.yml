@@ -1,5 +1,5 @@
 server:
-  port: 8082 # Port 8082 to avoid conflict with MTD Submitter (8080) & TrainClaim (8081)
+  port: ${PORT:8082} # Uses $PORT environment variable when deployed to Cloud Run, defaults to 8082 locally
   servlet:
     session:
       timeout: 30m
