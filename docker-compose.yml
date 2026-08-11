@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: renters-ready-db
+    environment:
+      POSTGRES_DB: rentersready
+      POSTGRES_USER: rentersready
+      POSTGRES_PASSWORD: rentersready_dev
+    ports:
+      - "5434:5432"
+    volumes:
+      - pgdata_rr:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rentersready"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata_rr:

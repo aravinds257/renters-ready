@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head>
+    <title>Renters' Rights Act 2025/2026 Compliance for UK Landlords</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row align-items-center py-5">
+        <div class="col-lg-7 mb-4 mb-lg-0">
+            <span class="badge bg-success bg-opacity-20 text-white border border-success border-opacity-50 py-2 px-3 mb-3 rounded-pill">
+                <i class="bi bi-shield-check text-emerald me-1" style="color: #10b981;"></i>Renters' Rights Act 2025 Enforcement Ready
+            </span>
+            <h1 class="display-4 fw-bold text-white mb-3">
+                Effortless UK Landlord Legal Compliance
+            </h1>
+            <p class="lead text-white-50 mb-4">
+                Section 21 "no-fault" evictions are gone. Section 13 rent reviews require strict statutory notices. Keep your rental properties 100% compliant with automated safety checks, Section 13 rent increases, and audit logs.
+            </p>
+            <div class="d-flex flex-wrap gap-3">
+                <a th:href="@{/register}" class="btn btn-primary btn-lg px-4 py-3 shadow">
+                    Start Free 14-Day Trial <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+                <a th:href="@{/login}" class="btn btn-outline-light btn-lg px-4 py-3">
+                    Landlord Login
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card shadow-lg p-4 border border-secondary border-opacity-20">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3 text-white"><i class="bi bi-speedometer2 text-emerald me-2" style="color: #10b981;"></i>Compliance Traffic Light</h5>
+                    <div class="d-flex align-items-center justify-content-between p-3 rounded mb-2 bg-dark bg-opacity-50 border border-secondary border-opacity-20">
+                        <div>
+                            <strong class="d-block text-white">Gas Safety (CP12)</strong>
+                            <small class="text-white-50">14 Flatbush Ave &middot; Expiring in 18 days</small>
+                        </div>
+                        <span class="badge bg-warning bg-opacity-25 text-white">Expiring Soon</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between p-3 rounded mb-2 bg-dark bg-opacity-50 border border-secondary border-opacity-20">
+                        <div>
+                            <strong class="d-block text-white">Section 13 Rent Review</strong>
+                            <small class="text-white-50">Form 4 notice generated &middot; £1,200 &rarr; £1,350</small>
+                        </div>
+                        <span class="badge bg-success bg-opacity-25 text-white">Compliant</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between p-3 rounded bg-dark bg-opacity-50 border border-secondary border-opacity-20">
+                        <div>
+                            <strong class="d-block text-white">EPC Certificate</strong>
+                            <small class="text-white-50">Rating C &middot; Valid until 2031</small>
+                        </div>
+                        <span class="badge bg-success bg-opacity-25 text-white">Valid</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feature Grid -->
+    <div class="row g-4 py-5 border-top border-secondary border-opacity-20">
+        <div class="col-md-4">
+            <div class="card p-4 h-100 shadow-sm">
+                <div class="fs-1 mb-3" style="color: #10b981;"><i class="bi bi-file-earmark-code"></i></div>
+                <h4 class="fw-bold text-white mb-2">Section 13 Notice Generator</h4>
+                <p class="text-white-50 mb-0">
+                    Generate legally binding Form 4 notices for rent reviews enforcing the 2-month minimum notice and annual frequency rules.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4 h-100 shadow-sm">
+                <div class="fs-1 mb-3" style="color: #10b981;"><i class="bi bi-clipboard2-check"></i></div>
+                <h4 class="fw-bold text-white mb-2">Safety Expiry Alerts</h4>
+                <p class="text-white-50 mb-0">
+                    Never miss a Gas Safety, EPC, or EICR renewal with automatic traffic-light warnings (Green, Amber, Red).
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4 h-100 shadow-sm">
+                <div class="fs-1 mb-3" style="color: #10b981;"><i class="bi bi-journal-text"></i></div>
+                <h4 class="fw-bold text-white mb-2">Audit & Dispute Trail</h4>
+                <p class="text-white-50 mb-0">
+                    Keep a timestamped log of tenant communications, served documents, and compliance records for tribunal protection.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

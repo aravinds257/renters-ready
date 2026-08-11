@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title layout:title-pattern="$CONTENT_TITLE - RentersReady">RentersReady</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --rr-bg: #0b1329;
+            --rr-card-bg: #16203d;
+            --rr-border: #263359;
+            --rr-accent: #10b981;
+            --rr-accent-hover: #059669;
+            --rr-text: #f8fafc;
+            --rr-text-muted: #94a3b8;
+        }
+
+        body {
+            background-color: var(--rr-bg);
+            color: var(--rr-text);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background-color: rgba(22, 32, 61, 0.85) !important;
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--rr-border);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.35rem;
+            color: #fff !important;
+        }
+
+        .nav-link {
+            color: var(--rr-text-muted) !important;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: #fff !important;
+        }
+
+        .card {
+            background-color: var(--rr-card-bg);
+            border: 1px solid var(--rr-border);
+            border-radius: 12px;
+            color: var(--rr-text);
+        }
+
+        .card-header {
+            background-color: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid var(--rr-border);
+        }
+
+        .btn-primary {
+            background-color: var(--rr-accent);
+            border-color: var(--rr-accent);
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--rr-accent-hover);
+            border-color: var(--rr-accent-hover);
+        }
+
+        .table-dark {
+            --bs-table-bg: var(--rr-card-bg);
+            --bs-table-border-color: var(--rr-border);
+        }
+
+        .form-control, .form-select {
+            background-color: #0b1329;
+            border: 1px solid var(--rr-border);
+            color: #fff;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background-color: #0b1329;
+            border-color: var(--rr-accent);
+            color: #fff;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+
+        .text-muted-custom {
+            color: var(--rr-text-muted) !important;
+        }
+
+        footer {
+            margin-top: auto;
+            border-top: 1px solid var(--rr-border);
+            background-color: rgba(22, 32, 61, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+            <i class="bi bi-shield-check text-emerald me-2 fs-3" style="color: #10b981;"></i>
+            RentersReady
+        </a>
+        <button class="navbar-toggler border-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-menu navbar-nav me-auto ms-lg-4" sec:authorize="isAuthenticated()">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/dashboard}"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/properties}"><i class="bi bi-building me-1"></i>Properties</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/tenancies}"><i class="bi bi-people me-1"></i>Tenancies</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/notices}"><i class="bi bi-file-earmark-text me-1"></i>Legal Notices</a>
+                </li>
+            </ul>
+            <div class="d-flex align-items-center">
+                <div sec:authorize="isAnonymous()">
+                    <a th:href="@{/login}" class="btn btn-outline-light me-2">Log in</a>
+                    <a th:href="@{/register}" class="btn btn-primary">Start Free Trial</a>
+                </div>
+                <div sec:authorize="isAuthenticated()" class="d-flex align-items-center">
+                    <span class="text-white-50 small me-3 d-none d-md-inline" sec:authentication="name">landlord@example.com</span>
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">Log out</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Body Fragment -->
+<main class="container py-4">
+    <!-- Success Alert -->
+    <div th:if="${success}" class="alert alert-success bg-success bg-opacity-20 text-white border-0 alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle me-2"></i><span th:text="${success}">Success message</span>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+    </div>
+    <!-- Error Alert -->
+    <div th:if="${error}" class="alert alert-danger bg-danger bg-opacity-20 text-white border-0 alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle me-2"></i><span th:text="${error}">Error message</span>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div layout:fragment="content"></div>
+</main>
+
+<footer class="py-3 text-center text-muted-custom small">
+    <div class="container">
+        &copy; 2026 RentersReady &middot; Renters' Rights Act 2025/2026 UK Landlord Compliance Manager
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

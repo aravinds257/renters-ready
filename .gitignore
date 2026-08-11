@@ -1,0 +1,28 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!target/fallbacks/
+*.class
+*.ear
+*.war
+*.cjs
+*.js.map
+*.sqldrop
+
+# Logs
+*.log
+logs/
+
+# OS / IDE
+.DS_Store
+.idea/
+*.iml
+.vscode/
+*.swp
+*.bak
+
+# Environment
+.env
+.env.local
+
+# Maven
+.mvn/
