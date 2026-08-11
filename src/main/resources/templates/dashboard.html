@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head><title>Landlord Dashboard</title></head>
+<body>
+<div layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-white mb-0">Landlord Portfolio Overview</h2>
+        <div>
+            <a th:href="@{/properties/add}" class="btn btn-outline-light me-2">
+                <i class="bi bi-building-add me-1"></i>Add Property
+            </a>
+            <a th:href="@{/tenancies/add}" class="btn btn-primary">
+                <i class="bi bi-person-plus me-1"></i>New Tenancy
+            </a>
+        </div>
+    </div>
+
+    <!-- Statistics KPI Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card p-3 shadow-sm text-center">
+                <small class="text-muted-custom d-block mb-1">Monthly Rent Roll</small>
+                <h1 class="fw-bold text-emerald" style="color: #10b981;">£<span th:text="${#numbers.formatDecimal(summary.totalMonthlyRentRoll, 1, 'COMMA', 2, 'POINT')}">0.00</span></h1>
+                <small class="text-white-50">Across <span th:text="${summary.activeTenancies}">0</span> active tenancies</small>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 shadow-sm text-center">
+                <small class="text-muted-custom d-block mb-1">Total Properties</small>
+                <h1 class="fw-bold text-white"><span th:text="${summary.totalProperties}">0</span></h1>
+                <a th:href="@{/properties}" class="small text-emerald text-decoration-none mt-2 d-inline-block" style="color: #10b981;">
+                    Manage portfolio <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 shadow-sm text-center">
+                <small class="text-muted-custom d-block mb-1">Compliance Health</small>
+                <div class="d-flex justify-content-center gap-2 mt-2">
+                    <span class="badge bg-danger fs-6" th:text="${summary.expiredCount + ' Expired/Missing'}">0 Expired</span>
+                    <span class="badge bg-warning text-dark fs-6" th:text="${summary.expiringSoonCount + ' Expiring Soon'}">0 Expiring</span>
+                </div>
+                <small class="text-white-50 mt-2 d-block">Renters' Rights Act Standards</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Compliance Traffic Light Warning Banner -->
+    <div th:if="${summary.expiredCount > 0 || summary.expiringSoonCount > 0}" class="card border-danger border-opacity-50 bg-danger bg-opacity-10 mb-4 shadow">
+        <div class="card-body d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-shield-exclamation text-danger fs-1 me-3"></i>
+                <div>
+                    <h5 class="mb-1 text-white fw-bold">Compliance Action Required!</h5>
+                    <p class="text-white-50 mb-0 small">
+                        You have <strong class="text-danger" th:text="${summary.expiredCount}">0</strong> expired/missing certificates and <strong class="text-warning" th:text="${summary.expiringSoonCount}">0</strong> expiring within 30 days.
+                    </p>
+                </div>
+            </div>
+            <a th:href="@{/properties}" class="btn btn-danger py-2 px-4 shadow">
+                Review Certificates <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Critical Alerts & Portfolio Section -->
+    <div class="row g-4">
+        <!-- Critical Compliance Actions Table -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="fw-bold mb-0 text-white"><i class="bi bi-exclamation-triangle text-warning me-2"></i>Critical Compliance Actions</h6>
+                </div>
+                <div class="card-body p-0">
+                    <div th:if="${#lists.isEmpty(summary.criticalAlerts)}" class="text-center py-5 text-white-50">
+                        <i class="bi bi-check-circle fs-1 text-emerald d-block mb-2" style="color: #10b981;"></i>
+                        All property certificates are 100% compliant!
+                    </div>
+                    <div th:if="${!#lists.isEmpty(summary.criticalAlerts)}" class="table-responsive">
+                        <table class="table table-dark table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Property</th>
+                                    <th>Certificate</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="a : ${summary.criticalAlerts}">
+                                    <td>
+                                        <a th:href="@{'/properties/' + ${a.property.id}}" class="text-white text-decoration-none fw-semibold" th:text="${a.property.addressLine1}">Property</a>
+                                    </td>
+                                    <td th:text="${a.checkType.displayLabel}">Gas Safety</td>
+                                    <td>
+                                        <span class="badge" th:classappend="'bg-' + ${a.status.cssClass}" th:text="${a.status.displayLabel}">Status</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Properties -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="fw-bold mb-0 text-white"><i class="bi bi-building me-2 text-emerald" style="color: #10b981;"></i>Recent Properties</h6>
+                    <a th:href="@{/properties}" class="small text-emerald text-decoration-none" style="color: #10b981;">View all</a>
+                </div>
+                <div class="card-body p-0">
+                    <div th:if="${#lists.isEmpty(summary.recentProperties)}" class="text-center py-5 text-white-50">
+                        <i class="bi bi-building-add fs-2 d-block mb-2"></i>
+                        No properties added yet.
+                    </div>
+                    <div th:if="${!#lists.isEmpty(summary.recentProperties)}" class="table-responsive">
+                        <table class="table table-dark table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Address</th>
+                                    <th>Type</th>
+                                    <th>Gas Safety Expiry</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="rp : ${summary.recentProperties}">
+                                    <td>
+                                        <a th:href="@{'/properties/' + ${rp.id}}" class="text-white text-decoration-none" th:text="${rp.addressLine1}">Address</a>
+                                    </td>
+                                    <td th:text="${rp.propertyType.displayLabel}">Flat</td>
+                                    <td>
+                                        <span th:if="${rp.gasSafetyExpiryDate != null}" th:text="${#temporals.format(rp.gasSafetyExpiryDate, 'dd MMM yyyy')}">Date</span>
+                                        <span th:if="${rp.gasSafetyExpiryDate == null}" class="badge bg-danger">Missing</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
