@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head><title>Property Details &amp; Compliance</title></head>
+<body>
+<div layout:fragment="content">
+    <a th:href="@{/properties}" class="text-muted-custom text-decoration-none mb-3 d-block">
+        <i class="bi bi-arrow-left me-1"></i>Back to portfolio
+    </a>
+
+    <div class="row g-4 mb-4">
+        <!-- Property Info Header -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <span class="badge bg-primary bg-opacity-20 text-emerald mb-2" style="color: #10b981;" th:text="${property.propertyType.displayLabel}">Flat</span>
+                            <h2 class="fw-bold text-white mb-1" th:text="${property.addressLine1}">Address</h2>
+                            <p class="text-white-50 mb-0">
+                                <span th:text="${property.city}">City</span>, <span th:text="${property.postcode}">Postcode</span>
+                            </p>
+                        </div>
+                        <form th:action="@{'/properties/' + ${property.id} + '/delete'}" method="post" onsubmit="return confirm('Delete this property and all associated records?')">
+                            <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash me-1"></i>Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statutory Compliance Traffic Light Table -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0 text-white"><i class="bi bi-shield-check text-emerald me-2" style="color: #10b981;"></i>Statutory Compliance Tracker</h5>
+                    <span class="small text-white-50">Renters' Rights Act Standards</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Certificate / Requirement</th>
+                                    <th>Expiry Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="c : ${complianceChecks}">
+                                    <td class="fw-semibold text-white" th:text="${c.checkType.displayLabel}">Gas Safety</td>
+                                    <td>
+                                        <span th:if="${c.expiryDate != null}" th:text="${#temporals.format(c.expiryDate, 'dd MMM yyyy')}">Date</span>
+                                        <span th:if="${c.expiryDate == null}" class="text-white-50">-</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge" th:classappend="'bg-' + ${c.status.cssClass}" th:text="${c.status.displayLabel}">Valid</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tenancy Panel -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm position-sticky" style="top: 20px;">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0 text-white"><i class="bi bi-people me-2 text-emerald" style="color: #10b981;"></i>Tenancy</h5>
+                    <a th:href="@{'/tenancies/add?propertyId=' + ${property.id}}" class="btn btn-sm btn-primary">
+                        <i class="bi bi-plus-lg me-1"></i>New Tenancy
+                    </a>
+                </div>
+                <div class="card-body p-4">
+                    <div th:if="${#lists.isEmpty(tenancies)}" class="text-center py-4 text-white-50">
+                        <i class="bi bi-person-x fs-2 d-block mb-2"></i>
+                        No active tenancy logged.
+                    </div>
+                    <div th:if="${!#lists.isEmpty(tenancies)}">
+                        <div th:each="t : ${tenancies}" class="border border-secondary border-opacity-20 rounded p-3 mb-3 bg-dark bg-opacity-50">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <strong class="text-white fs-6" th:text="${t.tenantName}">Tenant Name</strong>
+                                <span th:if="${t.active}" class="badge bg-success">Active</span>
+                                <span th:if="${!t.active}" class="badge bg-secondary">Ended</span>
+                            </div>
+                            <div class="small text-white-50 mb-2">
+                                Rent: <strong class="text-white">£<span th:text="${#numbers.formatDecimal(t.monthlyRent, 1, 'COMMA', 2, 'POINT')}">0</span>/mo</strong> (Due day <span th:text="${t.rentDueDay}">1</span>)
+                            </div>
+                            <div class="small text-white-50 mb-3">
+                                Started: <span th:text="${#temporals.format(t.startDate, 'dd MMM yyyy')}">Date</span>
+                            </div>
+                            <a th:href="@{'/notices/section13?tenancyId=' + ${t.id}}" class="btn btn-sm btn-outline-light w-100 mb-2">
+                                <i class="bi bi-file-earmark-text me-1"></i>Issue Section 13 Rent Review
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

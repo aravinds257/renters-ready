@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head><title>Add Rental Property</title></head>
+<body>
+<div layout:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            <a th:href="@{/properties}" class="text-muted-custom text-decoration-none mb-3 d-block">
+                <i class="bi bi-arrow-left me-1"></i>Back to portfolio
+            </a>
+
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <h3 class="fw-bold mb-4 text-white"><i class="bi bi-building-add text-emerald me-2" style="color: #10b981;"></i>Add Property</h3>
+
+                    <form th:action="@{/properties/add}" th:object="${propertyForm}" method="post">
+                        <!-- Address -->
+                        <h5 class="fw-bold text-white mb-3">Property Address</h5>
+                        <div class="mb-3">
+                            <label for="addressLine1" class="form-label fw-medium">Address Line 1</label>
+                            <input type="text" class="form-control" id="addressLine1" th:field="*{addressLine1}"
+                                   th:classappend="${#fields.hasErrors('addressLine1')} ? 'is-invalid' : ''" placeholder="e.g. 14 High Street">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('addressLine1')}" th:errors="*{addressLine1}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="addressLine2" class="form-label fw-medium">Address Line 2 <span class="text-white-50">(optional)</span></label>
+                            <input type="text" class="form-control" id="addressLine2" th:field="*{addressLine2}">
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label for="city" class="form-label fw-medium">City / Town</label>
+                                <input type="text" class="form-control" id="city" th:field="*{city}"
+                                       th:classappend="${#fields.hasErrors('city')} ? 'is-invalid' : ''">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="postcode" class="form-label fw-medium">Postcode</label>
+                                <input type="text" class="form-control" id="postcode" th:field="*{postcode}"
+                                       th:classappend="${#fields.hasErrors('postcode')} ? 'is-invalid' : ''" placeholder="e.g. SW1A 1AA">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('postcode')}" th:errors="*{postcode}"></div>
+                            </div>
+                        </div>
+
+                        <!-- Property Attributes -->
+                        <h5 class="fw-bold text-white mb-3 border-top border-secondary border-opacity-20 pt-4">Property Specifications</h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label for="propertyType" class="form-label fw-medium">Property Type</label>
+                                <select class="form-select" id="propertyType" th:field="*{propertyType}">
+                                    <option th:each="pt : ${propertyTypes}" th:value="${pt}" th:text="${pt.displayLabel}"></option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="bedrooms" class="form-label fw-medium">Bedrooms</label>
+                                <input type="number" class="form-control" id="bedrooms" th:field="*{bedrooms}" min="1" max="20">
+                            </div>
+                        </div>
+
+                        <!-- Initial Certificate Expiries -->
+                        <h5 class="fw-bold text-white mb-3 border-top border-secondary border-opacity-20 pt-4">Safety &amp; Compliance Expiries</h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <label for="gasSafetyExpiryDate" class="form-label fw-medium">Gas Safety Expiry</label>
+                                <input type="date" class="form-control" id="gasSafetyExpiryDate" th:field="*{gasSafetyExpiryDate}">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="epcExpiryDate" class="form-label fw-medium">EPC Expiry</label>
+                                <input type="date" class="form-control" id="epcExpiryDate" th:field="*{epcExpiryDate}">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="eicrExpiryDate" class="form-label fw-medium">EICR Expiry</label>
+                                <input type="date" class="form-control" id="eicrExpiryDate" th:field="*{eicrExpiryDate}">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100">Register Property</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

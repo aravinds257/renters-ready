@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head><title>Tenancies</title></head>
+<body>
+<div layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-white mb-0"><i class="bi bi-people text-emerald me-2" style="color: #10b981;"></i>Active Tenancies</h2>
+        <a th:href="@{/tenancies/add}" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i>New Tenancy
+        </a>
+    </div>
+
+    <!-- Empty State -->
+    <div th:if="${#lists.isEmpty(tenancies)}" class="card border-0 shadow text-center py-5">
+        <div class="card-body">
+            <i class="bi bi-person-lines-fill fs-1 text-muted-custom mb-3"></i>
+            <h4 class="fw-bold text-white">No active tenancies</h4>
+            <p class="text-white-50">Register tenant details and monthly rent schedules.</p>
+            <a th:href="@{/tenancies/add}" class="btn btn-primary mt-2">Add a tenancy</a>
+        </div>
+    </div>
+
+    <!-- Tenancies Table -->
+    <div th:if="${!#lists.isEmpty(tenancies)}" class="card border-0 shadow">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-dark mb-0">
+                    <thead>
+                        <tr>
+                            <th>Tenant Name</th>
+                            <th>Property</th>
+                            <th>Monthly Rent</th>
+                            <th>Rent Due Day</th>
+                            <th>Start Date</th>
+                            <th>Deposit Reg</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="t : ${tenancies}">
+                            <td class="fw-semibold text-white" th:text="${t.tenantName}">John Doe</td>
+                            <td th:text="${t.property.addressLine1 + ', ' + t.property.city}">Address</td>
+                            <td class="fw-bold text-emerald" style="color: #10b981;">£<span th:text="${#numbers.formatDecimal(t.monthlyRent, 1, 'COMMA', 2, 'POINT')}">1000</span></td>
+                            <td th:text="${'Day ' + t.rentDueDay}">Day 1</td>
+                            <td th:text="${#temporals.format(t.startDate, 'dd MMM yyyy')}">01 Jan 2026</td>
+                            <td>
+                                <span th:if="${t.depositReference != null}" class="badge bg-success bg-opacity-20 text-white" th:text="${t.depositSchemeName ?: 'Registered'}">DPS</span>
+                                <span th:if="${t.depositReference == null}" class="text-white-50">-</span>
+                            </td>
+                            <td class="text-end pe-3">
+                                <a th:href="@{'/notices/section13?tenancyId=' + ${t.id}}" class="btn btn-sm btn-outline-light me-1">
+                                    Section 13 Notice
+                                </a>
+                                <form th:action="@{'/tenancies/' + ${t.id} + '/end'}" method="post" class="d-inline" onsubmit="return confirm('End this tenancy?')">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">End</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

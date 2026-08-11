@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head><title>Add Tenancy</title></head>
+<body>
+<div layout:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            <a th:href="@{/tenancies}" class="text-muted-custom text-decoration-none mb-3 d-block">
+                <i class="bi bi-arrow-left me-1"></i>Back to tenancies
+            </a>
+
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <h3 class="fw-bold mb-4 text-white"><i class="bi bi-person-plus text-emerald me-2" style="color: #10b981;"></i>New Tenancy Agreement</h3>
+
+                    <form th:action="@{/tenancies/add}" th:object="${tenancyForm}" method="post">
+                        <!-- Property Dropdown -->
+                        <div class="mb-3">
+                            <label for="propertyId" class="form-label fw-medium">Property</label>
+                            <select class="form-select" id="propertyId" th:field="*{propertyId}"
+                                    th:classappend="${#fields.hasErrors('propertyId')} ? 'is-invalid' : ''">
+                                <option value="">Select Property...</option>
+                                <option th:each="p : ${properties}" th:value="${p.id}" th:text="${p.addressLine1 + ', ' + p.city}"></option>
+                            </select>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('propertyId')}" th:errors="*{propertyId}"></div>
+                        </div>
+
+                        <!-- Tenant Info -->
+                        <h5 class="fw-bold text-white mb-3 border-top border-secondary border-opacity-20 pt-4">Tenant Information</h5>
+                        <div class="mb-3">
+                            <label for="tenantName" class="form-label fw-medium">Tenant Full Name(s)</label>
+                            <input type="text" class="form-control" id="tenantName" th:field="*{tenantName}"
+                                   th:classappend="${#fields.hasErrors('tenantName')} ? 'is-invalid' : ''" placeholder="e.g. Mark Johnson">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('tenantName')}" th:errors="*{tenantName}"></div>
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label for="tenantEmail" class="form-label fw-medium">Tenant Email</label>
+                                <input type="email" class="form-control" id="tenantEmail" th:field="*{tenantEmail}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="tenantPhone" class="form-label fw-medium">Tenant Phone</label>
+                                <input type="text" class="form-control" id="tenantPhone" th:field="*{tenantPhone}">
+                            </div>
+                        </div>
+
+                        <!-- Rent Terms -->
+                        <h5 class="fw-bold text-white mb-3 border-top border-secondary border-opacity-20 pt-4">Financial &amp; Rent Terms</h5>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <label for="startDate" class="form-label fw-medium">Tenancy Start Date</label>
+                                <input type="date" class="form-control" id="startDate" th:field="*{startDate}"
+                                       th:classappend="${#fields.hasErrors('startDate')} ? 'is-invalid' : ''">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="monthlyRent" class="form-label fw-medium">Monthly Rent (&pound;)</label>
+                                <input type="number" step="0.01" class="form-control" id="monthlyRent" th:field="*{monthlyRent}"
+                                       th:classappend="${#fields.hasErrors('monthlyRent')} ? 'is-invalid' : ''" placeholder="1200.00">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('monthlyRent')}" th:errors="*{monthlyRent}"></div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="rentDueDay" class="form-label fw-medium">Rent Due Day of Month</label>
+                                <input type="number" class="form-control" id="rentDueDay" th:field="*{rentDueDay}" min="1" max="31">
+                            </div>
+                        </div>
+
+                        <!-- Deposit Info -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <label for="depositAmount" class="form-label fw-medium">Deposit Amount (&pound;)</label>
+                                <input type="number" step="0.01" class="form-control" id="depositAmount" th:field="*{depositAmount}">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="depositSchemeName" class="form-label fw-medium">Deposit Scheme</label>
+                                <input type="text" class="form-control" id="depositSchemeName" th:field="*{depositSchemeName}" placeholder="e.g. DPS / TDS">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="depositReference" class="form-label fw-medium">Deposit Ref</label>
+                                <input type="text" class="form-control" id="depositReference" th:field="*{depositReference}">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100">Register Tenancy</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
