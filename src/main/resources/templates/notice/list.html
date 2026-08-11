@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head><title>Statutory Legal Notices</title></head>
+<body>
+<div layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-white mb-0"><i class="bi bi-file-earmark-text text-emerald me-2" style="color: #10b981;"></i>Legal Notices &amp; Reviews</h2>
+        <div>
+            <a th:href="@{/notices/section13}" class="btn btn-primary me-2">
+                <i class="bi bi-file-earmark-plus me-1"></i>Section 13 Rent Review
+            </a>
+            <a th:href="@{/notices/section8}" class="btn btn-outline-light">
+                <i class="bi bi-exclamation-octagon me-1"></i>Section 8 Notice
+            </a>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div th:if="${#lists.isEmpty(notices)}" class="card border-0 shadow text-center py-5">
+        <div class="card-body">
+            <i class="bi bi-file-earmark-x fs-1 text-muted-custom mb-3"></i>
+            <h4 class="fw-bold text-white">No statutory notices generated</h4>
+            <p class="text-white-50">Generate Form 4 Section 13 rent review notices or Section 8 possession notices.</p>
+            <a th:href="@{/notices/section13}" class="btn btn-primary mt-2">Generate Section 13 Rent Review</a>
+        </div>
+    </div>
+
+    <!-- Notices List -->
+    <div th:if="${!#lists.isEmpty(notices)}" class="card border-0 shadow">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-dark mb-0">
+                    <thead>
+                        <tr>
+                            <th>Notice Type</th>
+                            <th>Property &amp; Tenant</th>
+                            <th>Rent Adjustment</th>
+                            <th>Proposed Start Date</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="n : ${notices}">
+                            <td class="fw-semibold text-white" th:text="${n.noticeType.displayLabel}">Section 13</td>
+                            <td>
+                                <strong th:text="${n.tenancy.tenantName}">Tenant</strong>
+                                <span class="d-block small text-white-50" th:text="${n.tenancy.property.addressLine1 + ', ' + n.tenancy.property.city}">Address</span>
+                            </td>
+                            <td>
+                                <span th:if="${n.proposedRent != null}">
+                                    £<span th:text="${n.currentRent}">1000</span> &rarr;
+                                    <strong class="text-emerald" style="color: #10b981;">£<span th:text="${#numbers.formatDecimal(n.proposedRent, 1, 'COMMA', 2, 'POINT')}">1150</span></strong>
+                                </span>
+                                <span th:if="${n.proposedRent == null}" class="text-white-50">-</span>
+                            </td>
+                            <td th:text="${#temporals.format(n.startingDate, 'dd MMM yyyy')}">01 Nov 2026</td>
+                            <td>
+                                <span class="badge" th:classappend="'bg-' + ${n.status.cssClass}" th:text="${n.status.displayLabel}">Draft</span>
+                            </td>
+                            <td class="text-end pe-3">
+                                <a th:href="@{'/notices/' + ${n.id} + '/print'}" class="btn btn-sm btn-outline-light me-1" target="_blank">
+                                    <i class="bi bi-printer me-1"></i>View / Print
+                                </a>
+                                <form th:if="${n.status.name() == 'DRAFT'}" th:action="@{'/notices/' + ${n.id} + '/serve'}" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-primary">Mark Served</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head><title>Section 13 Rent Review Notice (Form 4)</title></head>
+<body>
+<div layout:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            <a th:href="@{/notices}" class="text-muted-custom text-decoration-none mb-3 d-block">
+                <i class="bi bi-arrow-left me-1"></i>Back to notices
+            </a>
+
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <h3 class="fw-bold text-white mb-2"><i class="bi bi-file-earmark-code text-emerald me-2" style="color: #10b981;"></i>Section 13 Rent Review Notice</h3>
+                    <p class="text-white-50 small mb-4">
+                        Official Form 4 statutory notice under Section 13(2) of the Housing Act 1988 / Renters' Rights Act.
+                    </p>
+
+                    <!-- Statutory Rules Info Banner -->
+                    <div class="alert alert-info bg-info bg-opacity-10 border-0 text-white p-3 mb-4 rounded">
+                        <h6 class="fw-bold mb-1"><i class="bi bi-info-circle me-1"></i>Renters' Rights Act Compliance Rules:</h6>
+                        <ul class="mb-0 small ps-3">
+                            <li>At least <strong>2 full months' advance notice</strong> is legally required for monthly tenancies.</li>
+                            <li>Rent cannot be increased more than <strong>once in any 12-month period</strong>.</li>
+                        </ul>
+                    </div>
+
+                    <form th:action="@{/notices/section13}" th:object="${section13Form}" method="post">
+                        <!-- Tenancy Selection -->
+                        <div class="mb-3">
+                            <label for="tenancyId" class="form-label fw-medium">Tenancy &amp; Property</label>
+                            <select class="form-select" id="tenancyId" th:field="*{tenancyId}"
+                                    th:classappend="${#fields.hasErrors('tenancyId')} ? 'is-invalid' : ''">
+                                <option value="">Select Tenancy...</option>
+                                <option th:each="t : ${tenancies}" th:value="${t.id}"
+                                        th:text="${t.tenantName + ' &middot; ' + t.property.addressLine1 + ' (Current Rent: &pound;' + t.monthlyRent + ')'}"></option>
+                            </select>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('tenancyId')}" th:errors="*{tenancyId}"></div>
+                        </div>
+
+                        <!-- Proposed Rent & Starting Date -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label for="proposedRent" class="form-label fw-medium">Proposed New Monthly Rent (&pound;)</label>
+                                <input type="number" step="0.01" class="form-control" id="proposedRent" th:field="*{proposedRent}"
+                                       th:classappend="${#fields.hasErrors('proposedRent')} ? 'is-invalid' : ''" placeholder="1350.00">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('proposedRent')}" th:errors="*{proposedRent}"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="startingDate" class="form-label fw-medium">Proposed Starting Date</label>
+                                <input type="date" class="form-control" id="startingDate" th:field="*{startingDate}"
+                                       th:classappend="${#fields.hasErrors('startingDate')} ? 'is-invalid' : ''">
+                                <div class="form-text text-white-50">Must be at least 2 months from notice date.</div>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('startingDate')}" th:errors="*{startingDate}"></div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100">Generate Form 4 Section 13 Notice</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

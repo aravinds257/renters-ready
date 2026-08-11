@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head><title>Section 8 Possession Notice</title></head>
+<body>
+<div layout:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            <a th:href="@{/notices}" class="text-muted-custom text-decoration-none mb-3 d-block">
+                <i class="bi bi-arrow-left me-1"></i>Back to notices
+            </a>
+
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <h3 class="fw-bold text-white mb-2"><i class="bi bi-exclamation-octagon text-danger me-2"></i>Section 8 Notice Seeking Possession</h3>
+                    <p class="text-white-50 small mb-4">
+                        Statutory notice under Section 8 of the Housing Act 1988 for specific lawful grounds under the Renters' Rights Act.
+                    </p>
+
+                    <form th:action="@{/notices/section8}" th:object="${section8Form}" method="post">
+                        <!-- Tenancy Selection -->
+                        <div class="mb-3">
+                            <label for="tenancyId" class="form-label fw-medium">Tenancy &amp; Property</label>
+                            <select class="form-select" id="tenancyId" th:field="*{tenancyId}"
+                                    th:classappend="${#fields.hasErrors('tenancyId')} ? 'is-invalid' : ''">
+                                <option value="">Select Tenancy...</option>
+                                <option th:each="t : ${tenancies}" th:value="${t.id}"
+                                        th:text="${t.tenantName + ' &middot; ' + t.property.addressLine1}"></option>
+                            </select>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('tenancyId')}" th:errors="*{tenancyId}"></div>
+                        </div>
+
+                        <!-- Possession Grounds Selection -->
+                        <div class="mb-3">
+                            <label for="grounds" class="form-label fw-medium">Lawful Ground for Possession</label>
+                            <select class="form-select" id="grounds" th:field="*{grounds}">
+                                <option value="Ground 8 (Rent Arrears - 3 Months Mandatory)">Ground 8 (Rent Arrears - 3 Months Mandatory)</option>
+                                <option value="Ground 1 (Owner or Family Member Move-In - 4 Months Notice)">Ground 1 (Owner or Family Move-In - 4 Months Notice)</option>
+                                <option value="Ground 10 (General Persistent Rent Arrears)">Ground 10 (General Persistent Rent Arrears)</option>
+                                <option value="Ground 14 (Anti-Social Behaviour / Nuisance)">Ground 14 (Anti-Social Behaviour / Nuisance)</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="startingDate" class="form-label fw-medium">Notice Expiry / Possession Seeking Date</label>
+                            <input type="date" class="form-control" id="startingDate" th:field="*{startingDate}">
+                        </div>
+
+                        <button type="submit" class="btn btn-danger btn-lg w-100">Generate Section 8 Notice</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

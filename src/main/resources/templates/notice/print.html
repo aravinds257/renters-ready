@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Form 4 Statutory Notice - Rent Review</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #000;
+            background: #fff;
+            margin: 0;
+            padding: 40px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 2px solid #000;
+            padding: 30px;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .header h2 {
+            margin: 0;
+            font-size: 18px;
+            text-transform: uppercase;
+        }
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section-title {
+            font-weight: bold;
+            text-transform: uppercase;
+            border-bottom: 1px solid #000;
+            padding-bottom: 3px;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+        td, th {
+            padding: 8px;
+            border: 1px solid #000;
+            text-align: left;
+        }
+        .notes {
+            background-color: #f8f9fa;
+            border: 1px solid #ccc;
+            padding: 15px;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+        .no-print {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+        .btn-print {
+            background: #10b981;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        @media print {
+            .no-print { display: none; }
+            body { padding: 0; }
+            .container { border: none; padding: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="no-print">
+    <button class="btn-print" onclick="window.print()">Print / Save PDF</button>
+</div>
+
+<div class="container">
+    <div class="header">
+        <h2>Form 4: Landlord's Notice Proposing a New Rent</h2>
+        <p>Section 13(2) of the Housing Act 1988 / Renters' Rights Act 2025</p>
+    </div>
+
+    <div class="section">
+        <p><strong>To Tenant(s):</strong> <span th:text="${notice.tenancy.tenantName}">Tenant Name</span></p>
+        <p><strong>Address of Dwelling:</strong> <span th:text="${notice.tenancy.property.addressLine1 + ', ' + notice.tenancy.property.city + ' ' + notice.tenancy.property.postcode}">Property Address</span></p>
+    </div>
+
+    <div class="section">
+        <div class="section-title">1. Notice of Proposed Rent Review</div>
+        <p>Take notice that your landlord proposes a new rent for the above premises as set out below:</p>
+        <table>
+            <tr>
+                <th>Existing Monthly Rent</th>
+                <td><strong>£<span th:text="${#numbers.formatDecimal(notice.currentRent, 1, 'COMMA', 2, 'POINT')}">1000.00</span></strong></td>
+            </tr>
+            <tr>
+                <th>Proposed New Monthly Rent</th>
+                <td><strong>£<span th:text="${#numbers.formatDecimal(notice.proposedRent, 1, 'COMMA', 2, 'POINT')}">1150.00</span></strong></td>
+            </tr>
+            <tr>
+                <th>Percentage Increase</th>
+                <td>+<span th:text="${percentageIncrease}">15.00</span>%</td>
+            </tr>
+            <tr>
+                <th>Proposed Starting Date</th>
+                <td><strong><span th:text="${#temporals.format(notice.startingDate, 'EEEE, d MMMM yyyy')}">Date</span></strong></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <div class="section-title">2. Landlord Declaration &amp; Contact Details</div>
+        <p><strong>Landlord Name:</strong> <span th:text="${landlord.fullName}">Landlord Name</span></p>
+        <p><strong>Landlord Email:</strong> <span th:text="${landlord.email}">Email</span></p>
+        <p th:if="${landlord.phone != null}"><strong>Landlord Phone:</strong> <span th:text="${landlord.phone}">Phone</span></p>
+        <p><strong>Date Notice Served:</strong> <span th:text="${#temporals.format(#temporals.createToday(), 'dd MMMM yyyy')}">Date</span></p>
+    </div>
+
+    <div class="notes">
+        <strong>GUIDANCE NOTES FOR TENANTS (Renters' Rights Act 2025/2026):</strong>
+        <ol>
+            <li>If you accept the proposed new rent, you do not need to do anything. The new rent will take effect on the starting date shown.</li>
+            <li>If you do not accept the proposed new rent, you may refer this notice to the <strong>First-tier Tribunal (Property Chamber)</strong> before the proposed starting date using Form Rents1.</li>
+            <li>The Tribunal will determine the market rent for the property. The rent determined by the Tribunal can be lower than, equal to, or higher than the landlord's proposal.</li>
+        </ol>
+    </div>
+</div>
+
+</body>
+</html>
