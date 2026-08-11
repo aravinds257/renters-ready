@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/main}">
+<head><title>Communication &amp; Evidence Audit Log</title></head>
+<body>
+<div layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-white mb-0"><i class="bi bi-journal-text text-emerald me-2" style="color: #10b981;"></i>Communication &amp; Evidence Trail</h2>
+    </div>
+
+    <!-- Add Log Form Modal Card -->
+    <div class="card border-0 shadow mb-4">
+        <div class="card-header py-3">
+            <h5 class="fw-bold mb-0 text-white"><i class="bi bi-plus-circle text-emerald me-2" style="color: #10b981;"></i>Log Tenant Communication or Event</h5>
+        </div>
+        <div class="card-body p-4">
+            <form th:action="@{/audit-logs/add}" th:object="${logForm}" method="post">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="propertyId" class="form-label fw-medium">Property <span class="text-white-50">(optional)</span></label>
+                        <select class="form-select" id="propertyId" th:field="*{propertyId}">
+                            <option value="">General Portfolio Log</option>
+                            <option th:each="p : ${properties}" th:value="${p.id}" th:text="${p.addressLine1 + ', ' + p.city}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="actionType" class="form-label fw-medium">Action Category</label>
+                        <select class="form-select" id="actionType" th:field="*{actionType}">
+                            <option value="TENANT_COMMUNICATION">Tenant Communication / Email</option>
+                            <option value="RENT_PAYMENT_REMINDER">Rent Payment Reminder</option>
+                            <option value="PROPERTY_INSPECTION">Property Inspection Completed</option>
+                            <option value="MAINTENANCE_RESOLVED">Maintenance Request Resolved</option>
+                            <option value="DOCUMENT_SERVED">Legal Document / Guide Served</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="description" class="form-label fw-medium">Event Description</label>
+                        <input type="text" class="form-control" id="description" th:field="*{description}" placeholder="e.g. Sent annual gas safety inspection date confirmation email">
+                    </div>
+                </div>
+                <div class="text-end mt-3">
+                    <button type="submit" class="btn btn-primary px-4">Log Entry in Audit Trail</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Audit Logs Table -->
+    <div class="card border-0 shadow">
+        <div class="card-header py-3">
+            <h5 class="fw-bold mb-0 text-white"><i class="bi bi-clock-history me-2"></i>Timestamped Audit Log History</h5>
+        </div>
+        <div class="card-body p-0">
+            <div th:if="${#lists.isEmpty(logs)}" class="text-center py-5 text-white-50">
+                <i class="bi bi-journal-x fs-1 d-block mb-2"></i>
+                No audit entries recorded yet.
+            </div>
+            <div th:if="${!#lists.isEmpty(logs)}" class="table-responsive">
+                <table class="table table-hover table-dark mb-0">
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="l : ${logs}">
+                            <td class="text-white-50 small" th:text="${#temporals.format(l.createdAt, 'dd MMM yyyy HH:mm')}">Date</td>
+                            <td>
+                                <span class="badge bg-secondary" th:text="${l.actionType}">Category</span>
+                            </td>
+                            <td class="text-white" th:text="${l.description}">Description</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
